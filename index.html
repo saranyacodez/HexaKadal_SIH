@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HexaKadal - AI Ocean Freight Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0d1117;
+            --bg-panel: #161b22;
+            --bg-element: #21262d;
+            --border-line: #30363d;
+            --neon-amber: #f0883e;
+            --neon-blue: #58a6ff;
+            --text-light: #e6edf3;
+            --text-dim: #8b949e;
+            --success-green: #3fb950;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-wrapper {
+            max-width: 1450px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-line);
+            padding: 18px 24px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            letter-spacing: 0.5px;
+        }
+
+        .brand h1 span {
+            color: var(--neon-amber);
+        }
+
+        .brand p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .status-pill {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--success-green);
+            border: 1px solid rgba(63, 185, 80, 0.4);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-line);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .panel h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--neon-amber);
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-group select, .input-group input {
+            width: 100%;
+            background: var(--bg-element);
+            border: 1px solid var(--border-line);
+            color: var(--text-light);
+            padding: 9px 12px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .input-group select:focus, .input-group input:focus {
+            border-color: var(--neon-blue);
+        }
+
+        .action-btn {
+            width: 100%;
+            background: var(--neon-amber);
+            color: #0d1117;
+            border: none;
+            padding: 11px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.85;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-line);
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--neon-blue);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .metric-val {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+
+        .metric-sub {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .terminal-box {
+            grid-column: 1 / -1;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-line);
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .terminal-box h4 {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .code-output {
+            background: var(--bg-element);
+            border: 1px solid var(--border-line);
+            border-radius: 6px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: var(--neon-blue);
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <header class="top-bar">
+        <div class="brand">
+            <h1>HEXAKADAL <span>// SIH26006</span></h1>
+            <p>AI-Powered Ocean Freight & Vessel Optimization Console</p>
+        </div>
+        <div class="status-pill">System Online (Port 8001)</div>
+    </header>
+
+    <div class="content-grid">
+        <!-- Control Form -->
+        <div class="panel">
+            <h3>Parameters Config</h3>
+            <div class="input-group">
+                <label>Origin Loading Port</label>
+                <select id="originPort">
+                    <option value="Australia (Newcastle)">Australia (Newcastle)</option>
+                    <option value="Indonesia (Kalimantan)">Indonesia (Kalimantan)</option>
+                    <option value="South Africa (Richards Bay)">South Africa (Richards Bay)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Discharge Port (East Coast)</label>
+                <select id="dischargePort">
+                    <option value="Paradip Port">Paradip Port</option>
+                    <option value="Visakhapatnam Port">Visakhapatnam Port</option>
+                    <option value="Haldia Port">Haldia Port</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Cargo Volume (MT)</label>
+                <input type="number" id="cargoVolume" value="100000">
+            </div>
+
+            <div class="input-group">
+                <label>Commodity Type (World Bank)</label>
+                <select id="commodityType">
+                    <option value="Crude oil, average">Crude oil, average</option>
+                    <option value="Coal, Australian">Coal, Australian</option>
+                    <option value="Iron ore, spot">Iron ore, spot</option>
+                </select>
+            </div>
+
+            <button class="action-btn" onclick="runAnalytics()">Execute AI Analytics</button>
+        </div>
+
+        <!-- Modules Grid -->
+        <div class="metrics-grid">
+            <div class="metric-box">
+                <div>
+                    <div class="metric-title">Module 1: Freight Forecast</div>
+                    <div class="metric-val" id="m1_window">Best Window: --</div>
+                    <div class="metric-sub" id="m1_rate">Min Predicted Rate: --</div>
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <div>
+                    <div class="metric-title">Module 2: Vessel Optimization</div>
+                    <div class="metric-val" id="m2_vessel">Vessel: --</div>
+                    <div class="metric-sub" id="m2_limit">Draft Limit: --</div>
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <div>
+                    <div class="metric-title">Module 3: Idle Management</div>
+                    <div class="metric-val" id="m3_laytime">Laytime: --</div>
+                    <div class="metric-sub" id="m3_strategy">Strategy: --</div>
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <div>
+                    <div class="metric-title">Module 4: Risk Mitigation</div>
+                    <div class="metric-val" id="m4_risk">Market Risk: --</div>
+                    <div class="metric-sub" id="m4_sync">AIS Sync: Active</div>
+                </div>
+            </div>
+
+            <div class="terminal-box">
+                <h4>ARIMA & World Bank Database Response Log</h4>
+                <div class="code-output" id="trendOutput">System standing by... Click 'Execute AI Analytics' to fetch backend data.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function runAnalytics() {
+        const payload = {
+            origin_port: document.getElementById('originPort').value,
+            discharge_port: document.getElementById('dischargePort').value,
+            cargo_volume: parseFloat(document.getElementById('cargoVolume').value),
+            commodity_type: document.getElementById('commodityType').value
+        };
+
+        const btn = document.querySelector('.action-btn');
+        btn.textContent = "Computing ARIMA Model...";
+        btn.style.opacity = "0.7";
+
+        try {
+            const response = await fetch('/run-analytics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response failed');
+            }
+
+            const result = await response.json();
+
+            document.getElementById('m1_window').textContent = `Best Window: ${result.module_1_forecast.best_charter_window}`;
+            document.getElementById('m1_rate').textContent = `Min Rate: ${result.module_1_forecast.min_predicted_rate}`;
+
+            document.getElementById('m2_vessel').textContent = result.module_2_vessel.recommended_vessel;
+            document.getElementById('m2_limit').textContent = result.module_2_vessel.bottleneck_limit;
+
+            document.getElementById('m3_laytime').textContent = `Laytime: ${result.module_3_idle.est_port_laytime}`;
+            document.getElementById('m3_strategy').textContent = result.module_3_idle.strategy;
+
+            document.getElementById('m4_risk').textContent = result.module_4_risk.market_risk_level;
+            document.getElementById('m4_sync').textContent = result.module_4_risk.sync_status;
+
+            const trendArray = result.module_1_forecast.arima_forecasted_trend;
+            document.getElementById('trendOutput').textContent = 
+                `Database Source: ${result.data_source}\n` +
+                `ARIMA Projection Vectors ($/MT):\n` +
+                JSON.stringify(trendArray, null, 2);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to connect to local Uvicorn API server!');
+        } finally {
+            btn.textContent = "Execute AI Analytics";
+            btn.style.opacity = "1";
+        }
+    }
+</script>
+
+</body>
+</html>
