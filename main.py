@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
 app = FastAPI(title="HexaKadal - SIH Production Architecture")
@@ -22,8 +22,16 @@ class FreightRequest(BaseModel):
 
 @app.get("/")
 def serve_frontend():
-    # Try multiple common paths for index.html during cloud deployment
-    for path in ["index.html", "./index.html", os.path.join(os.path.dirname(__file__), "index.html")]:
-        if os.path.exists(path):
-            return FileResponse(path)
-    return {"status": "HexaKadal Backend Running Successfully", "files_in_dir": os.listdir(".")}
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    files_in_current = os.listdir(current_dir)
+    
+    # Check current directory and parent directory
+    target_path = os.path.join(current_dir, "index.html")
+    if os.path.exists(target_path):
+        return FileResponse(target_path)
+        
+    return JSONResponse(status_code=200, content={
+        "error": "index.html not found",
+        "current_dir": current_dir,
+        "files_found": files_in_current
+    })
