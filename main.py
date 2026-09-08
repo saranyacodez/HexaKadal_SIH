@@ -22,7 +22,8 @@ class FreightRequest(BaseModel):
 
 @app.get("/")
 def serve_frontend():
-    file_path = os.path.join(os.path.dirname(__file__), "index.html")
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    return {"status": "HexaKadal Backend Running Successfully"}
+    # Try multiple common paths for index.html during cloud deployment
+    for path in ["index.html", "./index.html", os.path.join(os.path.dirname(__file__), "index.html")]:
+        if os.path.exists(path):
+            return FileResponse(path)
+    return {"status": "HexaKadal Backend Running Successfully", "files_in_dir": os.listdir(".")}
